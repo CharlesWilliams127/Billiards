@@ -22,8 +22,6 @@ int main()
 		return -1;
 	}
 
-	cout << glGetString(GL_SHADING_LANGUAGE_VERSION);
-
 	// check to see if the game loop runs properly
 	if (engine.gameLoop() == false)
 	{

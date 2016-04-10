@@ -17,26 +17,6 @@ namespace
 	}
 }
 
-struct Vertex
-{
-	vec3 loc;
-    vec2 uv;
-};
-
-struct Transform
-{
-	vec3 loc;
-	vec3 rot;
-	vec3 size;
-	mat4 transMatrix;
-};
-
-struct Object
-{
-	string texFileName;
-	Transform transform;
-};
-
 bool Engine::init()
 {
 	// initialize the window library
@@ -74,10 +54,23 @@ bool Engine::init()
 	}
 
 	// assign texture files to vector
-	texFiles.push_back("textures/TestTexture.png");
-	texFiles.push_back("textures/ball_8.jpg");
-	texFiles.push_back("textures/ball_3.jpg");
-	texFiles.push_back("textures/ball_11.jpg");
+	// ball identity cooresponds
+	texFiles.push_back("textures/cueball.png");
+	texFiles.push_back("textures/15ball.png");
+	texFiles.push_back("textures/1ball.png");
+	texFiles.push_back("textures/2ball.png");
+	texFiles.push_back("textures/3ball.png");
+	texFiles.push_back("textures/4ball.png");
+	texFiles.push_back("textures/5ball.png");
+	texFiles.push_back("textures/6ball.png");
+	texFiles.push_back("textures/7ball.png");
+	texFiles.push_back("textures/8ball.png");
+	texFiles.push_back("textures/9ball.png");
+	texFiles.push_back("textures/10ball.png");
+	texFiles.push_back("textures/11ball.png");
+	texFiles.push_back("textures/12ball.png");
+	texFiles.push_back("textures/13ball.png");
+	texFiles.push_back("textures/14ball.png");
 	texFiles.push_back("textures/pool_table.png");
 
 	// assign each texture file an usigned int to use as its texture ID
@@ -89,13 +82,53 @@ bool Engine::init()
 	// create all objects
 	for (int i = 0; i < texFiles.size(); i++)
 	{
-		objects.push_back(new Object);
+		objects.push_back(Object());
 		objects[i].texFileName = texFiles[i];
 	}
 
-	objects[4].transform.loc = vec3(0, 0, 0);
-	objects[4].transform.size = vec3(1, 1, 0);
-	objects[4].transform.rot = vec3(0, 0, 0);
+	// pool table
+	objects[0].transform.loc = vec3(0, 0, 0);
+	objects[0].transform.size = vec3(1, 1, 1);
+	objects[0].transform.rot = vec3(0, 0, 0);
+
+	// ball loop that will set up sizes for each ball
+	for (int i = 1; i < objects.size(); i++)
+	{
+		// x is 1.33% of the y
+		objects[i].transform.size = vec3(.04, .05, 1);
+		objects[i].transform.rot = vec3(0, 0, 0);
+	}
+
+	// pool ball locations
+	// balls increment by .05 in the x direction and .04 in the y
+	// cue ball
+	objects[1].transform.loc = vec3(.5, 0, 0);
+	//row 1
+	objects[2].transform.loc = vec3(-.45, 0, 0);
+	// row 2
+	objects[12].transform.loc = vec3(-.53, .04, 0);
+	objects[11].transform.loc = vec3(-.53, -.04, 0);
+	// row 3
+	objects[10].transform.loc = vec3(-.61, .08, 0);
+	objects[9].transform.loc = vec3(-.61, 0, 0);
+	objects[7].transform.loc = vec3(-.61, -.08, 0);
+	// row 4
+	objects[6].transform.loc = vec3(-.69, .12, 0);
+	objects[13].transform.loc = vec3(-.69, .04, 0);
+	objects[8].transform.loc = vec3(-.69, -.04, 0);
+	objects[14].transform.loc = vec3(-.69, -.12, 0);
+	// row 5
+	objects[16].transform.loc = vec3(-.77, .16, 0);
+	objects[3].transform.loc = vec3(-.77, .08, 0);
+	objects[15].transform.loc = vec3(-.77, .0, 0);
+	objects[4].transform.loc = vec3(-.77, -.08, 0);
+	objects[5].transform.loc = vec3(-.77, -.16, 0);
+
+	// iitialize the transormation matrix
+	//for (int i = 0; i < objects.size(); i++)
+	//{
+	//
+	//}
 
 	return true;
 }
@@ -254,34 +287,29 @@ bool Engine::gameLoop()
 		// clear the canvas
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// render the game objects
-		glBindVertexArray(vertArr);
-		glDrawArrays(GL_TRIANGLES, 0, vertCount);
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, texIDs[counter]);
-		// unbind after drawing
+		drawObject();
 
 		glfwSwapBuffers(GLFWwindowPtr);
 
 		// process queued window, mouse/keyboard callback events
-		keyWasDown = keyIsDown;
+		//keyWasDown = keyIsDown;
 		glfwPollEvents();
-
-		// check to see if escape key is pressed
-		if (keyIsDown[GLFW_KEY_ESCAPE])
-		{
-			glfwSetWindowShouldClose(GLFWwindowPtr, GL_TRUE);
-		}
-
-		if (keyIsDown[GLFW_MOUSE_BUTTON_LEFT] && keyWasDown[GLFW_MOUSE_BUTTON_LEFT] == false)
-		{
-			counter++;
-		}
-
-		if (counter >= texIDs.size())
-		{
-			counter = 0;
-		}
+		//
+		//// check to see if escape key is pressed
+		//if (keyIsDown[GLFW_KEY_ESCAPE])
+		//{
+		//	glfwSetWindowShouldClose(GLFWwindowPtr, GL_TRUE);
+		//}
+		//
+		//if (keyIsDown[GLFW_MOUSE_BUTTON_LEFT] && keyWasDown[GLFW_MOUSE_BUTTON_LEFT] == false)
+		//{
+		//	counter++;
+		//}
+		//
+		//if (counter >= texIDs.size())
+		//{
+		//	counter = 0;
+		//}
 
 	}
 
@@ -293,6 +321,21 @@ bool Engine::gameLoop()
 	glfwTerminate();
 
 	return true;
+}
+
+void Engine::drawObject()
+{
+	for (int i = 0; i < objects.size(); i++)
+	{
+		objects[i].transform.transMatrix = glm::translate(objects[i].transform.loc) * glm::scale(objects[i].transform.size) * glm::yawPitchRoll(objects[i].transform.rot.y, objects[i].transform.rot.x, objects[i].transform.rot.z);
+		glUniformMatrix4fv(2, 1, GL_FALSE, &objects[i].transform.transMatrix[0][0]);
+		// render the game objects
+		glBindVertexArray(vertArr);
+		glDrawArrays(GL_TRIANGLES, 0, vertCount);
+		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, texIDs[i]);
+		// unbind after drawing
+	}
 }
 
 Engine::Engine()
