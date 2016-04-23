@@ -309,10 +309,14 @@ bool Engine::gameLoop()
 		// this will apply an initial force whenever the cueball stops, representing the pool stick striking it
 		float mag;
 		vec3 mousePos;
+		vec3 force;
 
 		// if the cue ball is not already moving or in play, then allow the player to move it
 		if (keyIsDown[GLFW_MOUSE_BUTTON_LEFT] && !keyWasDown[GLFW_MOUSE_BUTTON_LEFT] && inPlay == false)
 		{
+			// reset the friction counter
+			frictionCounter = 0;
+
 			// gets the mouse location
 			double mouseX;
 			double mouseY;
@@ -324,32 +328,24 @@ bool Engine::gameLoop()
 			
 			glfwGetWindowSize(GLFWwindowPtr, &width, &height);
 
+			cout << mouseX << ", " << mouseY << endl;
+
 			mouseX = (mouseX / 400) - 1;
 			mouseY = (mouseY / 300) - 1;
 			
-			cout << mouseX << " " << mouseY << endl;
+			cout << mouseX << ", " << mouseY << endl;
 
-			// divide x and y to get it in percentage
-			//mouseX = mouseX / 800;
-			//mouseY = mouseY / 600;
-
-			// subtract .5 to center each
-			//mouseX -= .5;
-			//mouseY -= .5;
-
-			//mouseX = (2 * mouseX)
-
-			// get a vector from this
-			mousePos = vec3(mouseX, mouseY, 0);
+			// this is the vector that will hold the vector connecting the cue ball to the mouse
+			vec3 ballToMouse = vec3(mouseX - objects[1].transform.loc.x, -mouseY - objects[1].transform.loc.y, 0);
 
 			// find the magnitude
-			mag = sqrt((mouseX * mouseX) + (mouseY * mouseY));
+			mag = sqrt((pow(ballToMouse.x, 2)) + (pow(ballToMouse.y, 2)));
 
 			// find the unit vector
-			unit = vec3(mouseX / mag, mouseY / mag, 0);
+			unit = vec3(ballToMouse.x / mag, ballToMouse.y / mag, 0);
 
 			// this is the initial force
-			vec3 force = vec3(unit.x * FORCE, unit.y * FORCE, 0);
+			force = vec3(unit.x * FORCE, unit.y * FORCE, 0);
 
 			// multiply the initial force by that to find the final force vector
 			objects[1].calcForces(force, deltaTime);
@@ -366,22 +362,20 @@ bool Engine::gameLoop()
 			// apply the frictional force
 			objects[1].calcForces(forceFriction, deltaTime);
 
-			cout << objects[1].getRigidBody().vel.x << " " << objects[1].getRigidBody().vel.y << endl;
+			//cout << objects[1].getRigidBody().vel.x << " " << objects[1].getRigidBody().vel.y << endl;
 
-			// check to see when the ball's velocity = 0, then set inPlay to false
-			if (objects[1].getRigidBody().vel.x < 0 && )
+			// set a counter
+			frictionCounter += FORCE_FRICTION;
+
+			//cout << frictionCounter << endl << FORCE << endl;
+
+			// check if frictional force exceeds initial force
+			if (frictionCounter <= -FORCE)
 			{
-				// set frictional force to 0
+				// if frictional force is greater than the negative initial force then stop the object
 				objects[1].stop();
 
-				inPlay = false;
-			}
-
-			if (objects[1].getRigidBody().vel.y <= 0)
-			{
-				// set frictional force to 0
-				objects[1].stop();
-
+				// allow the cue ball to be hit again
 				inPlay = false;
 			}
 		}
