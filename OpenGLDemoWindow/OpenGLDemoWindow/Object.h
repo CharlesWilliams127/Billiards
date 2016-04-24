@@ -35,21 +35,35 @@ struct RigidBody
 	float mass;
 };
 
+enum Colliders
+{
+	colliderless,
+	AABB,
+	sphere
+};
+
 class Object
 {
 private:
+	// collider attribute to keep track of what it is
+	Colliders collider;
+
 	// a filename to hold the texture file
 	char* texFileName;
 
 	// assign a rigidbody to the object
 	RigidBody rigidBody;
 
+	// these attributes are for detecting collisions
+	float radius;
+
+
 public:
 
 	// a Transform to hold the object's position, rotation, and scale
 	Transform transform;
 
-	Object(char* tFN);
+	Object(char* tFN, Colliders c);
 	Object();
 	~Object();
 
@@ -66,5 +80,8 @@ public:
 	void move(float deltaTime);
 
 	void draw();
+
+	// detect collisions
+	bool collidesWith(Object &otherObject);
 };
 

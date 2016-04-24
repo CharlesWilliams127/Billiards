@@ -84,10 +84,13 @@ bool Engine::init()
 		texIDs.push_back(i);
 	}
 
-	// create all objects
-	for (int i = 0; i < texFiles.size(); i++)
+	//create the pool table
+	objects.push_back(Object(texFiles[0], colliderless));
+
+	// create all balls
+	for (int i = 1; i < texFiles.size(); i++)
 	{
-		objects.push_back(Object(texFiles[i]));
+		objects.push_back(Object(texFiles[i], sphere));
 	}
 
 	// pool table

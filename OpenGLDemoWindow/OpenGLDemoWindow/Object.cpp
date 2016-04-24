@@ -5,7 +5,7 @@ Object::Object()
 {
 }
 
-Object::Object(char * tFN)
+Object::Object(char * tFN, Colliders c)
 {
 	// assign values to the rigidBody
 	rigidBody.force = vec3(0, 0, 0);
@@ -13,6 +13,10 @@ Object::Object(char * tFN)
 	rigidBody.mass = 1;
 
 	texFileName = tFN;
+
+	collider = c;
+
+	// assign radii and width and height
 }
 
 Object::~Object()
@@ -57,4 +61,23 @@ void Object::move(float deltaTime)
 
 	// increment the position
 	transform.loc += dr;
+}
+
+bool Object::collidesWith(Object & otherObject)
+{
+	// if either object has the colliderless attribute then they are not colliding
+	if (collider == colliderless || otherObject.collider == colliderless)
+	{
+		return false;
+	}
+
+	// if both objects are spheres
+	if (collider == sphere && otherObject.collider == sphere)
+	{
+		// get the distance between the objects
+		vec3 distance = transform.loc - otherObject.transform.loc;
+
+		// get the magnitude of the distance
+		float mag = sqrt((pow(distance.x, 2) + pow(distance.y, 2)));
+	}
 }
