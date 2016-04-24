@@ -55,7 +55,7 @@ private:
 	RigidBody rigidBody;
 
 	// these attributes are for detecting collisions
-	float radius;
+	float radius = transform.size.x;
 
 
 public:

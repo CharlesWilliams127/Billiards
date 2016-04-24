@@ -78,6 +78,38 @@ bool Object::collidesWith(Object & otherObject)
 		vec3 distance = transform.loc - otherObject.transform.loc;
 
 		// get the magnitude of the distance
-		float mag = sqrt((pow(distance.x, 2) + pow(distance.y, 2)));
+		float mag = sqrt((pow(distance.x, 2) + pow(distance.y, 2) + pow(distance.z, 2)));
+
+		//cout << mag << endl;
+
+		// check to see if the distance is greater than the objects radii
+		if (mag > (radius + otherObject.radius))
+		{
+			return false;
+		}
 	}
+
+	// check to see if both are AABB
+	if (collider == AABB && otherObject.collider == AABB)
+	{
+		// check the mins and maxes on the x axis
+		if (((transform.loc.x - transform.size.x) < (otherObject.transform.loc.x + otherObject.transform.size.x)) || ((transform.loc.x + transform.size.x) > (otherObject.transform.loc.x - otherObject.transform.size.x)))
+		{
+			return false;
+		}
+
+		// check the mins and maxes on the y axis
+		if (((transform.loc.y - transform.size.y) < (otherObject.transform.loc.y + otherObject.transform.size.y)) || ((transform.loc.y + transform.size.y) > (otherObject.transform.loc.y - otherObject.transform.size.y)))
+		{
+			return false;
+		}
+
+		// check the mins and maxes on the z axis
+		if (((transform.loc.z - transform.size.z) < (otherObject.transform.loc.z + otherObject.transform.size.z)) || ((transform.loc.y + transform.size.z) > (otherObject.transform.loc.z - otherObject.transform.size.z)))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }

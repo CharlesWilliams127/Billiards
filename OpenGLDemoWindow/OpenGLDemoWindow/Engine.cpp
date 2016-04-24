@@ -113,23 +113,23 @@ bool Engine::init()
 	//row 1
 	objects[2].transform.loc = vec3(-.35, 0, 0);
 	// row 2
-	objects[12].transform.loc = vec3(-.43, .05, 0);
-	objects[11].transform.loc = vec3(-.43, -.05, 0);
+	objects[12].transform.loc = vec3(-.43, .06, 0);
+	objects[11].transform.loc = vec3(-.43, -.06, 0);
 	// row 3
-	objects[10].transform.loc = vec3(-.51, .10, 0);
+	objects[10].transform.loc = vec3(-.51, .12, 0);
 	objects[9].transform.loc = vec3(-.51, 0, 0);
-	objects[7].transform.loc = vec3(-.51, -.10, 0);
+	objects[7].transform.loc = vec3(-.51, -.12, 0);
 	// row 4
-	objects[6].transform.loc = vec3(-.59, .15, 0);
-	objects[13].transform.loc = vec3(-.59, .05, 0);
-	objects[8].transform.loc = vec3(-.59, -.05, 0);
-	objects[14].transform.loc = vec3(-.59, -.15, 0);
+	objects[6].transform.loc = vec3(-.59, .18, 0);
+	objects[13].transform.loc = vec3(-.59, .06, 0);
+	objects[8].transform.loc = vec3(-.59, -.06, 0);
+	objects[14].transform.loc = vec3(-.59, -.18, 0);
 	// row 5
-	objects[16].transform.loc = vec3(-.67, .20, 0);
-	objects[3].transform.loc = vec3(-.67, .10, 0);
+	objects[16].transform.loc = vec3(-.67, .24, 0);
+	objects[3].transform.loc = vec3(-.67, .12, 0);
 	objects[15].transform.loc = vec3(-.67, .0, 0);
-	objects[4].transform.loc = vec3(-.67, -.10, 0);
-	objects[5].transform.loc = vec3(-.67, -.20, 0);
+	objects[4].transform.loc = vec3(-.67, -.12, 0);
+	objects[5].transform.loc = vec3(-.67, -.24, 0);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -385,6 +385,24 @@ bool Engine::gameLoop()
 
 		// actually move the object
 		objects[1].move(deltaTime);
+
+		// check for collisions
+		for (int i = 0; i < objects.size(); i++)
+		{
+			for (int j = 1; j < objects.size(); j++)
+			{
+				if (objects[i].collidesWith(objects[j]))
+				{
+					//cout << "Object " << i << " is colliding with object " << j << endl;
+
+					break;
+				}
+				else
+				{
+					//cout << "not colliding" << endl;
+				}
+			}
+		}
 
 		// if the object goes off of the screen
 		if (objects[1].transform.loc.x > 1)
