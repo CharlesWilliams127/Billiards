@@ -111,5 +111,54 @@ bool Object::collidesWith(Object & otherObject)
 		}
 	}
 
+	// check if this object is a sphere and it's colliding with a AABB
+	if (collider == sphere && otherObject.collider == AABB)
+	{
+		// set sqrDistance to 0
+		float sqrDistance = 0;
+
+		// current is left of other
+		if (transform.loc.x < (otherObject.transform.loc.x - otherObject.transform.size.x))
+		{
+			sqrDistance += pow((otherObject.transform.loc.x - otherObject.transform.size.x) - transform.loc.x, 2);
+		}
+
+		// current is right of other
+		if (transform.loc.x > (otherObject.transform.loc.x + otherObject.transform.size.x))
+		{
+			sqrDistance += pow( transform.loc.x - (otherObject.transform.loc.x + otherObject.transform.size.x), 2);
+		}
+
+		// current is left of other
+		if (transform.loc.y < (otherObject.transform.loc.y - otherObject.transform.size.y))
+		{
+			sqrDistance += pow((otherObject.transform.loc.y - otherObject.transform.size.y) - transform.loc.y, 2);
+		}
+
+		// current is right of other
+		if (transform.loc.y >(otherObject.transform.loc.y + otherObject.transform.size.y))
+		{
+			sqrDistance += pow(transform.loc.y - (otherObject.transform.loc.y + otherObject.transform.size.y), 2);
+		}
+
+		// current is left of other
+		if (transform.loc.z < (otherObject.transform.loc.z - otherObject.transform.size.z))
+		{
+			sqrDistance += pow((otherObject.transform.loc.z - otherObject.transform.size.z) - transform.loc.z, 2);
+		}
+
+		// current is right of other
+		if (transform.loc.z >(otherObject.transform.loc.z + otherObject.transform.size.z))
+		{
+			sqrDistance += pow(transform.loc.z - (otherObject.transform.loc.z + otherObject.transform.size.z), 2);
+		}
+
+		if (sqrDistance > pow(radius, 2))
+		{
+			return false;
+		}
+	}
+
+	// this means the objects are colliding!
 	return true;
 }

@@ -60,6 +60,7 @@ bool Engine::init()
 
 	// assign texture files to vector
 	// ball identity cooresponds
+
 	texFiles.push_back("textures/cueball.png");
 	texFiles.push_back("textures/15ball.png");
 	texFiles.push_back("textures/1ball.png");
@@ -331,12 +332,12 @@ bool Engine::gameLoop()
 			
 			glfwGetWindowSize(GLFWwindowPtr, &width, &height);
 
-			cout << mouseX << ", " << mouseY << endl;
+			//cout << mouseX << ", " << mouseY << endl;
 
 			mouseX = (mouseX / 400) - 1;
 			mouseY = (mouseY / 300) - 1;
 			
-			cout << mouseX << ", " << mouseY << endl;
+			//cout << mouseX << ", " << mouseY << endl;
 
 			// this is the vector that will hold the vector connecting the cue ball to the mouse
 			vec3 ballToMouse = vec3(mouseX - objects[1].transform.loc.x, -mouseY - objects[1].transform.loc.y, 0);
@@ -387,13 +388,14 @@ bool Engine::gameLoop()
 		objects[1].move(deltaTime);
 
 		// check for collisions
+		// for the purpose of checking collisions, object 1 is the cue ball
 		for (int i = 0; i < objects.size(); i++)
 		{
-			for (int j = 1; j < objects.size(); j++)
+			for (int j = i + 1; j < objects.size(); j++)
 			{
 				if (objects[i].collidesWith(objects[j]))
 				{
-					//cout << "Object " << i << " is colliding with object " << j << endl;
+					cout << "Object " << i << " is colliding with object " << j << endl;
 
 					break;
 				}
