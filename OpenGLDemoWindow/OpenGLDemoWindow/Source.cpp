@@ -13,19 +13,19 @@ int main()
 	// check to see if bufferModel returns false
 	if (engine.bufferModel() == false)
 	{
-		return -1;
+		return -2;
 	}
 
 	// check to see if the shaders are used properly
 	if (engine.useShaders() == false)
 	{
-		return -1;
+		return -3;
 	}
 
 	// check to see if the game loop runs properly
 	if (engine.gameLoop() == false)
 	{
-		return -1;
+		return -4;
 	}
 
 	return 0;

@@ -15,11 +15,6 @@ namespace
 	{
 		keyIsDown[key] = action;
 	}
-
-	//static void cursor_position_callback(GLFWwindow* window, double mouseX, double mouseY)
-	//{
-	//
-	//}
 }
 
 bool Engine::init()
@@ -171,6 +166,7 @@ bool Engine::init()
 	objects[4].transform.loc = vec3(-.67, -.12, 0);
 	objects[5].transform.loc = vec3(-.67, -.24, 0);
 
+	// alpha
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -290,6 +286,8 @@ bool Engine::gameLoop()
 	// set a variable to pass into the texture whatever
 	//unsigned int texID;
 
+	camera = Camera();
+
 	// loop that will load all shaders
 	for (int i = 0; i < texFiles.size(); i++)
 	{
@@ -330,9 +328,7 @@ bool Engine::gameLoop()
 
 	int counter = 0;
 
-	// declare the initial force that is applied to the cue ball
-	
-
+	// values that will hold the mouse's position
 	double mouseX;
 	double mouseY;
 
@@ -434,7 +430,7 @@ bool Engine::gameLoop()
 			{
 				if (objects[i].collidesWith(objects[j]))
 				{
-					cout << "Object " << i << " is colliding with object " << j << endl;
+					cout << "Ball " << i << " is colliding with ball " << j << endl;
 
 					break;
 				}
@@ -443,7 +439,7 @@ bool Engine::gameLoop()
 			{
 				if (pocketCollision(pockets[h], objects[i]))
 				{
-					cout << "Object " << i << " is colliding with pocket " << h << endl;
+					cout << "Ball " << i << " is colliding with pocket " << h << endl;
 				}
 			}
 		}
@@ -470,6 +466,10 @@ bool Engine::gameLoop()
 		}
 		//cout << objects[1].transform.loc.x << endl;
 
+		// update the camera
+
+		//camera.update(vec3(), deltaTime);
+
 		for (int i = 0; i < objects.size(); i++)
 		{
 			// call the current objects draw method
@@ -488,18 +488,54 @@ bool Engine::gameLoop()
 		// process queued window, mouse/keyboard callback events
 		//keyWasDown = keyIsDown;
 		glfwPollEvents();
-		//
-		//// check to see if escape key is pressed
+
+		camera.update(vec3(0, 0, 0), deltaTime);
+
+		if (keyIsDown[GLFW_KEY_LEFT])
+		{
+			//cout << "Left" << endl;
+			camera.update(vec3(-40, 0, 0), deltaTime);
+		}
+		else
+		{
+			camera.stop();
+		}
+
+		if (keyIsDown[GLFW_KEY_RIGHT])
+		{
+			//cout << "Right" << endl;
+			camera.update(vec3(40, 0, 0), deltaTime);
+		}
+		else
+		{
+			camera.stop();
+		}
+
+		if (keyIsDown[GLFW_KEY_UP])
+		{
+			//cout << "Up" << endl;
+			camera.update(vec3(0, 40, 0), deltaTime);
+		}
+		else
+		{
+			camera.stop();
+		}
+
+		if (keyIsDown[GLFW_KEY_DOWN])
+		{
+			//cout << "Down" << endl;
+			camera.update(vec3(0, -40, 0), deltaTime);
+		}
+		else
+		{
+			camera.stop();
+		}
+
+		// check to see if escape key is pressed
 		if (keyIsDown[GLFW_KEY_ESCAPE])
 		{
 			glfwSetWindowShouldClose(GLFWwindowPtr, GL_TRUE);
 		}
-		//
-		//
-		//if (counter >= texIDs.size())
-		//{
-		//	counter = 0;
-		//}
 
 	}
 

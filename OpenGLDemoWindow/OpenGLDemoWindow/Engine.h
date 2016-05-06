@@ -7,6 +7,7 @@
 #include <FreeImage.h>
 #include <math.h>
 
+#include "Camera.h"
 #include "ShaderManager.h"
 #include "Object.h"
 #include <string>
@@ -54,6 +55,9 @@ private:
 	vector <Object> objects;
 
 	vector <Pocket> pockets;
+
+	// camera
+	Camera camera;
 
 	// constants for tracking forces
 	const float FORCE = 100;
