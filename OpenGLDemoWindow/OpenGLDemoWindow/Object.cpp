@@ -35,14 +35,6 @@ void Object::stop()
 
 void Object::draw()
 {
-	//mat4 identity =
-	//{
-	//	1, 0, 0, 0,
-	//	0, 1, 0, 0,
-	//	0, 0, 1, 0,
-	//	0, 0, 0, 1
-	//};
-
 	// these methods draw each individual object to the screen
 	transform.transMatrix = glm::translate(transform.loc) * glm::scale(transform.size) * glm::yawPitchRoll(transform.rot.y, transform.rot.x, transform.rot.z);
 

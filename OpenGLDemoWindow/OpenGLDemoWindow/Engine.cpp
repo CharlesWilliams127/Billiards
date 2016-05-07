@@ -17,6 +17,10 @@ namespace
 	}
 }
 
+Engine::Engine()
+{
+}
+
 bool Engine::init()
 {
 	// initialize the window library
@@ -173,6 +177,11 @@ bool Engine::init()
 	currTime = glfwGetTime();
 
 	return true;
+
+	// render in wire frame mode
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 vec3 Engine::getMousePos()
@@ -180,91 +189,12 @@ vec3 Engine::getMousePos()
 	return vec3();
 }
 
-bool Engine::bufferModel()
+bool Engine::bufferModels()
 {
-	// define the vertex locations
-	vector<vec3> locs =
+	if (model.buffer("models/sphere.obj") == false)
 	{
-		{ 1, 1, 0 },
-		{ -1, 1, 0 },
-		{ -1, -1, 0 },
-		{ 1, -1, 0 } 
-	};
-
-	// connecting the dots
-	vector <unsigned int>
-		locInds =
-	{ 0, 1, 2, 0, 2, 3 };
-
-	// add UV locations and vertices
-	vector <vec2> uvs 
-	{
-		{1, 1},
-		{0, 1},
-		{0, 0},
-		{1, 0}
-	};
-
-	// connect UV dots
-	vector <unsigned int>
-		uvInds =
-	{ 0, 1, 2, 0, 2, 3 };
-
-	// assign vertCount
-	vertCount = locInds.size();
-
-	// duplicate the vertices into a single buffer
-	vector<Vertex> vertBufData(vertCount);
-	for (unsigned int i = 0; i < vertCount; i++)
-	{
-		vertBufData[i].loc = locs[locInds[i]];
-		vertBufData[i].uv = uvs[uvInds[i]];
+		return false;
 	}
-
-	GLuint vertBuf;
-
-	// generate the vertex arrays and buffers
-	glGenVertexArrays(1, &vertArr);
-	glGenBuffers(1, &vertBuf);
-
-	// bind both of them
-	glBindVertexArray(vertArr);
-	glBindBuffer(GL_ARRAY_BUFFER, vertBuf);
-
-	// store the data in the buffer
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertCount, &vertBufData[0], GL_STATIC_DRAW);
-
-	// enable the attribute
-	glEnableVertexAttribArray(0);
-
-	// location attribute
-	glVertexAttribPointer(
-		0, // attribute index
-		3, // number of components (x, y, z)
-		GL_FLOAT, // type of data
-		GL_FALSE, // normalize data?
-		sizeof(Vertex), // stride (bytes per vertex)
-		0); // offset to this attribute
-
-	// enable the attribute
-	glEnableVertexAttribArray(1);
-
-	// uv attribute
-	glVertexAttribPointer(
-		1, // attribute index
-		2, // number of components (x, y)
-		GL_FLOAT, // type of data
-		GL_FALSE, // normalize data?
-		sizeof(Vertex), // stride (bytes per vertex)
-		(void*)sizeof(vec3)); // offset to this attribute
-
-			// unbind when finished
-	glBindVertexArray(0);
-
-	// set the color to cornflower blue, #throwbackthursday
-	glClearColor(0.392f, 0.584f, 0.929f, 1.0f);
-
-	return true;
 }
 
 bool Engine::useShaders()
@@ -343,7 +273,7 @@ bool Engine::gameLoop()
 		deltaTime = currTime - prevFrameTime;
 
 		// clear the canvas
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 		// this will apply an initial force whenever the cueball stops, representing the pool stick striking it
 		float mag;
@@ -476,8 +406,7 @@ bool Engine::gameLoop()
 			objects[i].draw();
 
 			// render the game objects
-			glBindVertexArray(vertArr);
-			glDrawArrays(GL_TRIANGLES, 0, vertCount);
+			model.render();
 			glBindVertexArray(0);
 			glBindTexture(GL_TEXTURE_2D, texIDs[i]);
 			// unbind after drawing
@@ -576,11 +505,6 @@ bool Engine::pocketCollision(Pocket &pocket, Object &object)
 		return true;
 	}
 }
-
-Engine::Engine()
-{
-}
-
 
 Engine::~Engine()
 {

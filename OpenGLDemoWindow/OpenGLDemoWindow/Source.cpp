@@ -11,7 +11,7 @@ int main()
 	}
 
 	// check to see if bufferModel returns false
-	if (engine.bufferModel() == false)
+	if (engine.bufferModels() == false)
 	{
 		return -2;
 	}

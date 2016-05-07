@@ -7,6 +7,7 @@
 #include <FreeImage.h>
 #include <math.h>
 
+#include "Model.h"
 #include "Camera.h"
 #include "ShaderManager.h"
 #include "Object.h"
@@ -24,12 +25,6 @@ using glm::mat4;
 using std::cout;
 using std::endl;
 
-struct Vertex
-{
-	vec3 loc;
-	vec2 uv;
-};
-
 struct Pocket
 {
 	Transform transform;
@@ -41,10 +36,6 @@ class Engine
 private:
 	// window pointer
 	GLFWwindow* GLFWwindowPtr;
-
-	unsigned int vertCount;
-
-	GLuint vertArr;
 
 	ShaderManager shaderManager;
 
@@ -59,8 +50,11 @@ private:
 	// camera
 	Camera camera;
 
+	// model
+	Model model;
+
 	// constants for tracking forces
-	const float FORCE = 100;
+	const float FORCE = 200;
 	const float FORCE_FRICTION = -1;
 	float frictionCounter = 0;
 
@@ -78,7 +72,7 @@ public:
 
 	vec3 getMousePos();
 
-	bool bufferModel();
+	bool bufferModels();
 
 	bool useShaders();
 
