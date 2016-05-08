@@ -67,4 +67,3 @@ private:
 
 	mat4 perspectiveMat;
 };
-

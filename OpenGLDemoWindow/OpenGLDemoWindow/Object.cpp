@@ -126,9 +126,9 @@ bool Object::collidesWith(Object & otherObject)
 		}
 
 		// current is right of other
-		if (transform.loc.x > (otherObject.transform.loc.x + otherObject.transform.size.x))
+		if (transform.loc.x >(otherObject.transform.loc.x + otherObject.transform.size.x))
 		{
-			sqrDistance += pow( transform.loc.x - (otherObject.transform.loc.x + otherObject.transform.size.x), 2);
+			sqrDistance += pow(transform.loc.x - (otherObject.transform.loc.x + otherObject.transform.size.x), 2);
 		}
 
 		// current is left of other

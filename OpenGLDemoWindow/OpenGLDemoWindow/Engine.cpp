@@ -1,7 +1,7 @@
 #include "Engine.h"
 
 // anonymous namespace
-namespace 
+namespace
 {
 	map<int, bool> keyIsDown;
 	map<int, bool> keyWasDown;
@@ -176,12 +176,12 @@ bool Engine::init()
 
 	currTime = glfwGetTime();
 
-	return true;
-
 	// render in wire frame mode
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_DEPTH_TEST);
+
+	return true;
 }
 
 vec3 Engine::getMousePos()
@@ -273,7 +273,7 @@ bool Engine::gameLoop()
 		deltaTime = currTime - prevFrameTime;
 
 		// clear the canvas
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// this will apply an initial force whenever the cueball stops, representing the pool stick striking it
 		float mag;
@@ -294,14 +294,14 @@ bool Engine::gameLoop()
 			glfwGetCursorPos(GLFWwindowPtr, &mouseX, &mouseY);
 
 			int width, height;
-			
+
 			glfwGetWindowSize(GLFWwindowPtr, &width, &height);
 
 			//cout << mouseX << ", " << mouseY << endl;
 
 			mouseX = (mouseX / 400) - 1;
 			mouseY = (mouseY / 300) - 1;
-			
+
 			//cout << mouseX << ", " << mouseY << endl;
 
 			// this is the vector that will hold the vector connecting the cue ball to the mouse

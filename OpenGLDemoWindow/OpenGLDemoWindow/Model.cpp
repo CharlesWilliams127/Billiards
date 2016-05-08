@@ -29,7 +29,7 @@ bool Model::buffer(string objFile)
 
 	// make a loop that will go until the file is empty
 	while (getline(inFile, line))
-	{ 
+	{
 		string lineLabel;
 
 		// turn the current line into a stream
@@ -81,33 +81,35 @@ bool Model::buffer(string objFile)
 
 		if (lineLabel == "f")
 		{
-			unsigned int ints[3];
+			unsigned int vertInd1, vertInd2, vertInd3;
 			char slashes;
 
 			for (int i = 0; i < 3; i++)
 			{
-				sStream >> ints[i];
+				// read in all of the data
+				sStream >> vertInd1;
 				sStream >> slashes;
+				sStream >> vertInd2;
+				sStream >> slashes;
+				sStream >> vertInd3;
+
+				//cout << vertInd1 << slashes << vertInd2 << slashes << vertInd3 << " ";
+
+				// assign the ints to the vertInds
+				vertInd1--;
+				vertInd2--;
+				vertInd3--;
+
+				// assign that vertInd to the vector
+				inds.push_back(VertInd{ vertInd1, vertInd2, vertInd3 });
 			}
-
-			ints[0]--;
-			ints[1]--;
-			ints[2]--;
-
-			// assign the ints to the vertInds
-			VertInd vertInd;
-			vertInd.locInd = ints[0];
-			vertInd.uvInd = ints[1];
-			vertInd.normInd = ints[2];
-
-			// assign that vertInd to the vector
-			inds.push_back(vertInd);
+			//cout << endl;
 		}
 	}
 
 	// close the file
 	inFile.close();
-	
+
 	// define the vertex locations
 	//vector<vec3> locs =
 	//{
@@ -146,7 +148,7 @@ bool Model::buffer(string objFile)
 		//vertBufData[i].loc = locs[locInds[i]];
 		//vertBufData[i].uv = uvs[uvInds[i]];
 		//vertBufData[i].normal = 
-		
+
 		vertBufData[i] = {
 			locations[inds[i].locInd],
 			uvs[inds[i].uvInd],
