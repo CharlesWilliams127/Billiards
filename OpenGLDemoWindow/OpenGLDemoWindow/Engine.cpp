@@ -102,8 +102,8 @@ bool Engine::init()
 	}
 
 	// pool table
-	objects[0].transform.loc = vec3(0, 0, 0);
-	objects[0].transform.size = vec3(1, 1, 1);
+	objects[0].transform.loc = vec3(0, 0, -.1);
+	objects[0].transform.size = vec3(1, 1, .1);
 	objects[0].transform.rot = vec3(0, 0, 0);
 
 	// assign pockets
@@ -141,7 +141,7 @@ bool Engine::init()
 	for (int i = 1; i < objects.size(); i++)
 	{
 		// x is 1.33% of the y
-		objects[i].transform.size = vec3(.04, .05, 1);
+		objects[i].transform.size = vec3(.04, .05, .05);
 		objects[i].transform.rot = vec3(0, 0, 0);
 	}
 
@@ -170,6 +170,10 @@ bool Engine::init()
 	objects[4].transform.loc = vec3(-.67, -.12, 0);
 	objects[5].transform.loc = vec3(-.67, -.24, 0);
 
+	// make and assign models
+	models.push_back(Model("models/quad.obj"));
+	models.push_back(Model("models/sphere.obj"));
+
 	// alpha
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -177,8 +181,8 @@ bool Engine::init()
 	currTime = glfwGetTime();
 
 	// render in wire frame mode
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//
 	glEnable(GL_DEPTH_TEST);
 
 	return true;
@@ -191,9 +195,12 @@ vec3 Engine::getMousePos()
 
 bool Engine::bufferModels()
 {
-	if (model.buffer("models/sphere.obj") == false)
+	for (int i = 0; i < models.size(); i++)
 	{
-		return false;
+		if (models[i].buffer() == false)
+		{
+			return false;
+		}
 	}
 }
 
@@ -406,7 +413,14 @@ bool Engine::gameLoop()
 			objects[i].draw();
 
 			// render the game objects
-			model.render();
+			if (i == 0)
+			{
+				models[0].render();
+			}
+			else
+			{
+				models[1].render();
+			}
 			glBindVertexArray(0);
 			glBindTexture(GL_TEXTURE_2D, texIDs[i]);
 			// unbind after drawing

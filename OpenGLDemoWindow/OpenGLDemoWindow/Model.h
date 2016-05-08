@@ -45,11 +45,16 @@ class Model
 private:
 	unsigned int vertCount;
 
+	string modelFile;
+
 	GLuint vertArr;
 public:
 	Model();
 
+	Model(string modFile);
+
 	// this is the method that will buffer the models
+	bool buffer();
 	bool buffer(string objFile);
 
 	// this will render and draw the model

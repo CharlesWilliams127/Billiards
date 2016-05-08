@@ -23,7 +23,7 @@ void main()
 	//	gl_FragColor = vec4(fragUV.x * .6, fragUV.y * .75, -fragUV.x * .8, fragUV.y * .8);
 	//}
 	
-	//gl_FragColor = texture(myTexture, fragUV);
+	gl_FragColor = texture(myTexture, fragUV);
 	
-	gl_FragColor = vec4(0, 0, 0, 1);
+	//gl_FragColor = vec4(0, 0, 0, 1);
 }
