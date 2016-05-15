@@ -5,26 +5,6 @@ Object::Object()
 {
 }
 
-void Object::calculateCollision(Object & otherObject)
-{
-	// the sum of both velocities (for momentum)
-	vec3 bigV = rigidBody.vel + otherObject.rigidBody.vel;
-
-	// this is the vector that will hold the vector connecting the ball to the other ball
-	vec3 distance = vec3(transform.loc.x - otherObject.transform.loc.x, transform.loc.y - otherObject.transform.loc.y, transform.loc.z - otherObject.transform.loc.z);
-
-	// find the magnitude
-	float mag = transform.size.x + otherObject.transform.size.x;
-
-	// find the unit vector
-	vec3 unit = distance * vec3(2, 2, 0);
-
-	rigidBody.vel += ((2 * rigidBody.mass) / (rigidBody.mass * otherObject.rigidBody.mass)) * unit;
-	otherObject.rigidBody.vel += ((2 * rigidBody.mass) / (rigidBody.mass * otherObject.rigidBody.mass)) * - unit;
-
-	//((rigidBody.mass - otherObject.rigidBody.mass) / (rigidBody.mass * otherObject.rigidBody.mass))
-}
-
 Object::Object(char * tFN, Colliders c)
 {
 	// assign values to the rigidBody
@@ -43,35 +23,14 @@ Object::~Object()
 {
 }
 
-void Object::friction(float deltaTime)
+RigidBody Object::getRigidBody()
 {
-	// check each of the velocity is not equal to 0, if not then reverse it
-	if (rigidBody.vel.x != 0)
-	{
-		calcForces(vec3(rigidBody.vel.x * -.5, 0, 0), deltaTime);
-	}
-	if (rigidBody.vel.y != 0)
-	{
-		calcForces(vec3(0, rigidBody.vel.y * -.5, 0), deltaTime);
-	}
-	if (rigidBody.vel.z != 0)
-	{
-		calcForces(vec3(0, 0, rigidBody.vel.z * -.5), deltaTime);
-	}
+	return rigidBody;
+}
 
-	// stop the object id velocity is 0
-	if (abs(rigidBody.force.x) <= 0.1)
-	{
-		rigidBody.force.x = 0;
-	}
-	if (abs(rigidBody.force.y) <= 0.1)
-	{
-		rigidBody.force.y = 0;
-	}
-	if (abs(rigidBody.force.z) <= 0.1)
-	{
-		rigidBody.force.z = 0;
-	}
+void Object::stop()
+{
+	rigidBody.vel = vec3(0, 0, 0);
 }
 
 void Object::draw()
@@ -95,37 +54,6 @@ void Object::calcForces(vec3 f, float deltaTime)
 
 	// increment the velocity
 	rigidBody.vel += dv;
-
-	// limit the velocities if they go too fast
-	if (rigidBody.vel.x > 10)
-	{
-		rigidBody.vel.x = 10;
-	}
-	else if (rigidBody.vel.x < -10)
-	{
-		rigidBody.vel.x = -10;
-	}
-
-	// limit the velocities if they go too fast
-	if (rigidBody.vel.y > 10)
-	{
-		rigidBody.vel.y = 10;
-	}
-	else if (rigidBody.vel.y < -10)
-	{
-		rigidBody.vel.y = -10;
-	}
-
-	// limit the velocities if they go too fast
-	if (rigidBody.vel.z > 10)
-	{
-		rigidBody.vel.z = 10;
-	}
-	else if (rigidBody.vel.z < -10)
-	{
-		rigidBody.vel.z = -10;
-	}
-
 }
 
 void Object::move(float deltaTime)

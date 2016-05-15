@@ -51,14 +51,13 @@ private:
 	// a filename to hold the texture file
 	char* texFileName;
 
+	// assign a rigidbody to the object
+	RigidBody rigidBody;
+
 	// these attributes are for detecting collisions
 
 
 public:
-	void calculateCollision(Object &otherObject);
-
-	// assign a rigidbody to the object
-	RigidBody rigidBody;
 
 	// a Transform to hold the object's position, rotation, and scale
 	Transform transform;
@@ -67,8 +66,11 @@ public:
 	Object();
 	~Object();
 
+	// a getter for the rigidBody
+	RigidBody getRigidBody();
+
 	// sets velocity to 0
-	void friction(float deltaTime);
+	void stop();
 
 	// calculate the forces
 	void calcForces(vec3 f, float deltaTime);

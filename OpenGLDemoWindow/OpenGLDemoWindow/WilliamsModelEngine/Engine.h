@@ -56,7 +56,7 @@ private:
 	Model model;
 
 	// constants for tracking forces
-	const float FORCE = 150;
+	const float FORCE = 200;
 	const float FORCE_FRICTION = -1;
 	float frictionCounter = 0;
 

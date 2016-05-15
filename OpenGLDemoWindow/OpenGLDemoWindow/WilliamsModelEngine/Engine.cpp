@@ -94,8 +94,6 @@ bool Engine::init()
 		objects.push_back(Object(texFiles[i], sphere));
 	}
 
-	objects[1].rigidBody.mass = 2;
-
 	// create all six pockets
 	for (int i = 0; i < 6; i++)
 	{
@@ -335,36 +333,31 @@ bool Engine::gameLoop()
 		if (inPlay == true)
 		{
 			// calculate a frictional force
-			//vec3 forceFriction = vec3(unit.x * FORCE_FRICTION, unit.y * FORCE_FRICTION, 0);
+			vec3 forceFriction = vec3(unit.x * FORCE_FRICTION, unit.y * FORCE_FRICTION, 0);
 
-			for (int i = 1; i < objects.size(); i++)
-			{
-				objects[i].friction(deltaTime);
-			}
-			
+			// apply the frictional force
+			objects[1].calcForces(forceFriction, deltaTime);
+
 			//cout << objects[1].getRigidBody().vel.x << " " << objects[1].getRigidBody().vel.y << endl;
 
 			// set a counter
-			//frictionCounter += FORCE_FRICTION;
+			frictionCounter += FORCE_FRICTION;
 
-			// a boolean that will check if all objects have stopped
-			//bool allStopped = true;
-			//
-			//// if all objects have stopped, then set inPlay to false
-			//for (int i = 1; i < objects.size(); i++)
-			//{
-			//	// if one object isn't stopped then set the boolean to false
-			//	if (objects[i].rigidBody.vel != vec3(0, 0, 0))
-			//	{
-			//		allStopped = false;
-			//	}
-			//}
-			//
-			//if (allStopped == false)
-			//{
-			//	inPlay = false;
-			//}
+			//cout << frictionCounter << endl << FORCE << endl;
+
+			// check if frictional force exceeds initial force
+			if (frictionCounter <= -FORCE)
+			{
+				// if frictional force is greater than the negative initial force then stop the object
+				objects[1].stop();
+
+				// allow the cue ball to be hit again
+				inPlay = false;
+			}
 		}
+
+		// actually move the object
+		objects[1].move(deltaTime);
 
 		// check for collisions
 		// for the purpose of checking collisions, object 1 is the cue ball
@@ -374,8 +367,6 @@ bool Engine::gameLoop()
 			{
 				if (objects[i].collidesWith(objects[j]))
 				{
-					objects[i].calculateCollision(objects[j]);
-
 					cout << "Ball " << i << " is colliding with ball " << j << endl;
 
 					break;
@@ -388,31 +379,28 @@ bool Engine::gameLoop()
 					cout << "Ball " << i << " is colliding with pocket " << h << endl;
 				}
 			}
-			// if the object goes off of the screen
-			if (objects[i].transform.loc.x > 1)
-			{
-				objects[i].transform.loc.x = -1;
-			}
-
-			if (objects[i].transform.loc.x < -1)
-			{
-				objects[i].transform.loc.x = 1;
-			}
-
-			if (objects[i].transform.loc.y > 1)
-			{
-				objects[i].transform.loc.y = -1;
-			}
-
-			if (objects[i].transform.loc.y < -1)
-			{
-				objects[i].transform.loc.y = 1;
-			}
-
-			// actually move the object
-			objects[i].move(deltaTime);
 		}
 
+		// if the object goes off of the screen
+		if (objects[1].transform.loc.x > 1)
+		{
+			objects[1].transform.loc.x = -1;
+		}
+
+		if (objects[1].transform.loc.x < -1)
+		{
+			objects[1].transform.loc.x = 1;
+		}
+
+		if (objects[1].transform.loc.y > 1)
+		{
+			objects[1].transform.loc.y = -1;
+		}
+
+		if (objects[1].transform.loc.y < -1)
+		{
+			objects[1].transform.loc.y = 1;
+		}
 		//cout << objects[1].transform.loc.x << endl;
 
 		// update the camera
