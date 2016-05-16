@@ -24,7 +24,7 @@ Camera::Camera()
 	width = 800;
 	height = 600;
 
-	fovy = 3.14159 * .4f / zoom;
+	fovy = 3.14159 * .3f / zoom;
 	aspect = (float)width / (float)height;
 	zNear = .01f;
 	zFar = 1000.f;

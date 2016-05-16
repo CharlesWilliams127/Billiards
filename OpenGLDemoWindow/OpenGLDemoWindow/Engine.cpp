@@ -143,7 +143,7 @@ bool Engine::init()
 	for (int i = 1; i < objects.size(); i++)
 	{
 		// x is 1.33% of the y
-		objects[i].transform.size = vec3(.04, .05, .05);
+		objects[i].transform.size = vec3(.04, .04, .04);
 		objects[i].transform.rot = vec3(0, 0, 0);
 	}
 
@@ -186,6 +186,7 @@ bool Engine::init()
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
 	return true;
 }
@@ -288,6 +289,13 @@ bool Engine::gameLoop()
 		float mag;
 		vec3 mousePos;
 		vec3 force;
+
+		// calculate lighting
+		vec3 lightLoc = vec3(0, 0, 4);
+
+		// pass in the light to the shaders
+		glUniform3f(5, lightLoc.x, lightLoc.y, lightLoc.z);
+		glUniform3f(6, camera.transform.loc.x, camera.transform.loc.y, camera.transform.loc.z);
 
 		// if the cue ball is not already moving or in play, then allow the player to move it
 		if (keyIsDown[GLFW_MOUSE_BUTTON_LEFT] && !keyWasDown[GLFW_MOUSE_BUTTON_LEFT] && inPlay == false)
@@ -438,13 +446,13 @@ bool Engine::gameLoop()
 			// unbind after drawing
 		}
 
+		camera.update(vec3(0, 0, 0), deltaTime);
+
 		glfwSwapBuffers(GLFWwindowPtr);
 
 		// process queued window, mouse/keyboard callback events
 		//keyWasDown = keyIsDown;
 		glfwPollEvents();
-
-		camera.update(vec3(0, 0, 0), deltaTime);
 
 		if (keyIsDown[GLFW_KEY_LEFT])
 		{

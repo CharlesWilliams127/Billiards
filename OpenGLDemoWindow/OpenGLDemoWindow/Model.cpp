@@ -172,6 +172,18 @@ bool Model::buffer()
 		sizeof(Vertex), // stride (bytes per vertex)
 		(void*)sizeof(vec3)); // offset to this attribute
 
+							  // enable the attribute
+	glEnableVertexAttribArray(4);
+
+	// normal attribute
+	glVertexAttribPointer(
+		4, // attribute index
+		3, // number of components (x, y)
+		GL_FLOAT, // type of data
+		GL_FALSE, // normalize data?
+		sizeof(Vertex), // stride (bytes per vertex)
+		(void*)sizeof(vec3)); // offset to this attribute
+
 							  // unbind when finished
 	glBindVertexArray(0);
 
